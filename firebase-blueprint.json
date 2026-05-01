@@ -1,0 +1,83 @@
+{
+  "entities": {
+    "InventoryItem": {
+      "title": "Inventory Item",
+      "description": "Represents an equipment item for sale in the inventory.",
+      "type": "object",
+      "properties": {
+        "inventoryId": {
+          "type": "string",
+          "description": "Unique inventory identifier for the item (e.g., SKU or internal ID)"
+        },
+        "category": {
+          "type": "string",
+          "description": "Category of the equipment"
+        },
+        "make": {
+          "type": "string",
+          "description": "Manufacturer or make of the equipment"
+        },
+        "model": {
+          "type": "string",
+          "description": "Model of the equipment"
+        },
+        "year": {
+          "type": "number",
+          "description": "Manufacturing year"
+        },
+        "sn": {
+          "type": "string",
+          "description": "Serial Number"
+        },
+        "description": {
+          "type": "string",
+          "description": "General description of the item"
+        },
+        "note": {
+          "type": "string",
+          "description": "Additional notes for the item"
+        },
+        "location": {
+          "type": "string",
+          "description": "Physical location of the item"
+        },
+        "price": {
+          "type": "number",
+          "description": "Price of the item"
+        },
+        "condition": {
+          "type": "string",
+          "description": "Condition of the item (e.g., Excellent, Good)"
+        },
+        "photos": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Array of photo URLs"
+        },
+        "video": {
+          "type": "string",
+          "description": "Video URL"
+        },
+        "createdAt": {
+          "type": "number",
+          "description": "Creation timestamp"
+        },
+        "updatedAt": {
+          "type": "number",
+          "description": "Last update timestamp"
+        }
+      },
+      "required": ["inventoryId", "category", "make", "model", "price"]
+    }
+  },
+  "firestore": {
+    "/inventory/{itemId}": {
+      "schema": {
+        "$ref": "#/entities/InventoryItem"
+      },
+      "description": "Collection storing all inventory items."
+    }
+  }
+}

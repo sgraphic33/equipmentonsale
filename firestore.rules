@@ -1,0 +1,57 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      // Allow any signed in user to act as admin for this specific demo/app requirement.
+      return isSignedIn();
+    }
+
+    function isValidInventoryItem(data) {
+      return data.keys().hasAll(['inventoryId', 'category', 'make', 'model', 'price', 'createdAt', 'updatedAt']) &&
+             data.inventoryId is string && data.inventoryId.size() > 0 && data.inventoryId.size() <= 100 &&
+             data.category is string && data.category.size() <= 100 &&
+             data.make is string && data.make.size() <= 100 &&
+             data.model is string && data.model.size() <= 100 &&
+             data.price is number && data.price >= 0 &&
+             data.createdAt is number &&
+             data.updatedAt is number &&
+             ( !('year' in data) || (data.year is number) ) &&
+             ( !('sn' in data) || (data.sn is string && data.sn.size() <= 100) ) &&
+             ( !('description' in data) || (data.description is string && data.description.size() <= 20000) ) &&
+             ( !('note' in data) || (data.note is string && data.note.size() <= 20000) ) &&
+             ( !('location' in data) || (data.location is string && data.location.size() <= 200) ) &&
+             ( !('condition' in data) || (data.condition is string && data.condition.size() <= 100) ) &&
+             ( !('photos' in data) || (data.photos is list && data.photos.size() <= 20) ) &&
+             ( !('video' in data) || (data.video is string && data.video.size() <= 1000) );
+    }
+
+    match /inventory/{itemId} {
+      allow read: if true; // Publicly readable
+      allow create: if isAdmin() && isValidId(itemId) && isValidInventoryItem(incoming());
+      allow update: if isAdmin() && isValidId(itemId) && isValidInventoryItem(incoming()) && incoming().createdAt == existing().createdAt;
+      allow delete: if isAdmin();
+    }
+  }
+}
