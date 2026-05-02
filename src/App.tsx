@@ -118,25 +118,22 @@ export default function App() {
     setFormStatus('submitting');
     
     try {
+      const submitData = new FormData();
+      submitData.append('access_key', 'dc7b914d-16de-4f78-b5a3-adc32fa3ab62');
+      submitData.append('subject', `New Inquiry from Equipment On Sale: ${formData.businessName}`);
+      submitData.append('from_name', `${formData.firstName} ${formData.lastName}`);
+      submitData.append('replyto', formData.email);
+      submitData.append('email', formData.email);
+      submitData.append('first_name', formData.firstName);
+      submitData.append('last_name', formData.lastName);
+      submitData.append('phone', formData.phone);
+      submitData.append('business_name', formData.businessName);
+      submitData.append('message', formData.question);
+      submitData.append('autoresponse', `Thank you for reaching out, ${formData.firstName} ${formData.lastName}. We have received your inquiry and a member of our team will respond within 24 hours.\n\nEquipment On Sale®\nA business of TW Holding (Teamwork of America LLC)\nEmail: info@equipmentonsale.com`);
+
       const response = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify({
-          access_key: 'dc7b914d-16de-4f78-b5a3-adc32fa3ab62',
-          subject: `New Inquiry from Equipment On Sale: ${formData.businessName}`,
-          from_name: `${formData.firstName} ${formData.lastName}`,
-          replyto: formData.email,
-          email: formData.email,
-          first_name: formData.firstName,
-          last_name: formData.lastName,
-          phone: formData.phone,
-          business_name: formData.businessName,
-          message: formData.question,
-          autoresponse: `Thank you for reaching out, ${formData.firstName} ${formData.lastName}. We have received your inquiry and a member of our team will respond within 24 hours.\n\nEquipment On Sale®\nA business of TW Holding (Teamwork of America LLC)\nEmail: info@equipmentonsale.com`
-        })
+        body: submitData
       });
 
       const result = await response.json();

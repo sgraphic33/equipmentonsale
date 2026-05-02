@@ -61,7 +61,8 @@ export default function Admin() {
       await signInWithPopup(auth, googleProvider);
     } catch (error) {
       console.error(error);
-      alert('Failed to log in.');
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      alert(`Failed to log in: ${errorMessage}`);
     }
   };
 
