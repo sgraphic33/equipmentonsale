@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import useWeb3Forms from '@web3forms/react';
+import HCaptcha from '@hcaptcha/react-hcaptcha';
 import { motion, AnimatePresence } from 'motion/react';
 import { Settings, ShieldCheck, Clock, Zap, Truck, Globe, ArrowRight, CheckCircle2, Factory, Stethoscope, Hammer, Package, HardHat, PhoneCall, Menu, X, Mail, MapPin } from 'lucide-react';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
@@ -35,9 +36,8 @@ export default function App() {
     email: '',
     question: ''
   });
-  const [captchaVal1, setCaptchaVal1] = useState(Math.floor(Math.random() * 10) + 1);
-  const [captchaVal2, setCaptchaVal2] = useState(Math.floor(Math.random() * 10) + 1);
-  const [captchaAnswer, setCaptchaAnswer] = useState('');
+  const [captchaToken, setCaptchaToken] = useState('');
+  const captchaRef = useRef<HCaptcha>(null);
   const [formErrors, setFormErrors] = useState<{
     phone?: string; 
     email?: string;
@@ -64,9 +64,10 @@ export default function App() {
         email: '',
         question: ''
       });
-      setCaptchaVal1(Math.floor(Math.random() * 10) + 1);
-      setCaptchaVal2(Math.floor(Math.random() * 10) + 1);
-      setCaptchaAnswer('');
+      setCaptchaToken('');
+      if (captchaRef.current) {
+        captchaRef.current.resetCaptcha();
+      }
     },
     onError: (errorMessage, data) => {
       console.error('Error sending email:', errorMessage, data);
@@ -126,13 +127,9 @@ export default function App() {
       isValid = false;
     }
     
-    if (parseInt(captchaAnswer) !== captchaVal1 + captchaVal2) {
-      errors.captcha = 'Incorrect security code. Please try again.';
+    if (!captchaToken) {
+      errors.captcha = 'Please complete the captcha verification.';
       isValid = false;
-      // Regenerate captcha on failure
-      setCaptchaVal1(Math.floor(Math.random() * 10) + 1);
-      setCaptchaVal2(Math.floor(Math.random() * 10) + 1);
-      setCaptchaAnswer('');
     }
     
     setFormErrors(errors);
@@ -150,7 +147,9 @@ export default function App() {
       email: formData.email,
       phone: formData.phone,
       business_name: formData.businessName,
-      message: formData.question
+      message: formData.question,
+      replyto: formData.email,
+      'h-captcha-response': captchaToken
     });
   };
 
@@ -406,22 +405,15 @@ export default function App() {
                         </div>
                       </div>
 
-                      <div className="bg-gray-800 p-5 rounded-sm border border-gray-700">
-                        <label htmlFor="captcha" className="block text-sm font-medium text-gray-300 mb-3">
-                          <ShieldCheck className="inline-block w-4 h-4 mr-1 text-[#B73D73] -mt-1" />
-                          Security Check: What is {captchaVal1} + {captchaVal2}? *
-                        </label>
-                        <input
-                          type="text"
-                          id="captcha"
-                          required
-                          placeholder="Your answer"
-                          className={`w-full sm:w-48 bg-gray-900 border ${formErrors.captcha ? 'border-red-500' : 'border-gray-700'} rounded-sm px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#B73D73] focus:border-transparent transition-all shadow-inner`}
-                          value={captchaAnswer}
-                          onChange={(e) => {
-                            setCaptchaAnswer(e.target.value);
+                      <div className="p-1">
+                        <HCaptcha
+                          ref={captchaRef}
+                          sitekey="50b2fe65-b00b-4b9e-ad62-3ba471098be2"
+                          onVerify={(token) => {
+                            setCaptchaToken(token);
                             if (formErrors.captcha) setFormErrors({...formErrors, captcha: undefined});
                           }}
+                          onExpire={() => setCaptchaToken('')}
                         />
                         {formErrors.captcha && <p className="mt-2 text-sm text-red-500">{formErrors.captcha}</p>}
                       </div>
