@@ -408,7 +408,7 @@ export default function App() {
                       <div className="p-1">
                         <Turnstile
                           ref={captchaRef}
-                          siteKey="0x4AAAAAAABqOaYJcW7v2O0c"
+                          siteKey="0x4AAAAAADHeS0Q6UJGMw4UP"
                           onSuccess={(token) => {
                             setCaptchaToken(token);
                             if (formErrors.captcha) setFormErrors({...formErrors, captcha: undefined});
