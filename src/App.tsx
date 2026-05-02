@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import useWeb3Forms from '@web3forms/react';
-import HCaptcha from '@hcaptcha/react-hcaptcha';
+import { Turnstile, TurnstileInstance } from '@marsidev/react-turnstile';
 import { motion, AnimatePresence } from 'motion/react';
 import { Settings, ShieldCheck, Clock, Zap, Truck, Globe, ArrowRight, CheckCircle2, Factory, Stethoscope, Hammer, Package, HardHat, PhoneCall, Menu, X, Mail, MapPin } from 'lucide-react';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
@@ -37,7 +37,7 @@ export default function App() {
     question: ''
   });
   const [captchaToken, setCaptchaToken] = useState('');
-  const captchaRef = useRef<HCaptcha>(null);
+  const captchaRef = useRef<TurnstileInstance>(null);
   const [formErrors, setFormErrors] = useState<{
     phone?: string; 
     email?: string;
@@ -66,7 +66,7 @@ export default function App() {
       });
       setCaptchaToken('');
       if (captchaRef.current) {
-        captchaRef.current.resetCaptcha();
+        captchaRef.current.reset();
       }
     },
     onError: (errorMessage, data) => {
@@ -149,7 +149,7 @@ export default function App() {
       business_name: formData.businessName,
       message: formData.question,
       replyto: formData.email,
-      'h-captcha-response': captchaToken
+      'cf-turnstile-response': captchaToken
     });
   };
 
@@ -406,10 +406,10 @@ export default function App() {
                       </div>
 
                       <div className="p-1">
-                        <HCaptcha
+                        <Turnstile
                           ref={captchaRef}
-                          sitekey="50b2fe65-b00b-4b9e-ad62-3ba471098be2"
-                          onVerify={(token) => {
+                          siteKey="0x4AAAAAAABqOaYJcW7v2O0c"
+                          onSuccess={(token) => {
                             setCaptchaToken(token);
                             if (formErrors.captcha) setFormErrors({...formErrors, captcha: undefined});
                           }}
