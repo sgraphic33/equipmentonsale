@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import useWeb3Forms from '@web3forms/react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Settings, ShieldCheck, Clock, Zap, Truck, Globe, ArrowRight, CheckCircle2, Factory, Stethoscope, Hammer, Package, HardHat, PhoneCall, Menu, X, Mail, MapPin } from 'lucide-react';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
@@ -46,6 +47,33 @@ export default function App() {
     question?: string;
     captcha?: string;
   }>({});
+
+  const { submit: submitWeb3Form } = useWeb3Forms({
+    access_key: 'dc7b914d-16de-4f78-b5a3-adc32fa3ab62',
+    settings: {
+      from_name: 'Equipment On Sale',
+      subject: 'New Inquiry from Equipment On Sale'
+    },
+    onSuccess: (successMessage, data) => {
+      setFormStatus('success');
+      setFormData({
+        firstName: '',
+        lastName: '',
+        businessName: '',
+        phone: '',
+        email: '',
+        question: ''
+      });
+      setCaptchaVal1(Math.floor(Math.random() * 10) + 1);
+      setCaptchaVal2(Math.floor(Math.random() * 10) + 1);
+      setCaptchaAnswer('');
+    },
+    onError: (errorMessage, data) => {
+      console.error('Error sending email:', errorMessage, data);
+      setFormStatus('idle');
+      alert('Failed to send message: ' + (errorMessage || 'Server error.'));
+    }
+  });
 
   const validateForm = () => {
     let isValid = true;
@@ -117,49 +145,13 @@ export default function App() {
     
     setFormStatus('submitting');
     
-    try {
-      const response = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify({
-          access_key: 'dc7b914d-16de-4f78-b5a3-adc32fa3ab62',
-          subject: `New Inquiry from Equipment On Sale: ${formData.businessName}`,
-          name: `${formData.firstName} ${formData.lastName}`,
-          email: formData.email,
-          phone: formData.phone,
-          business_name: formData.businessName,
-          message: formData.question
-        })
-      });
-
-      const result = await response.json();
-
-      if (response.ok && result.success) {
-        setFormStatus('success');
-        setFormData({
-          firstName: '',
-          lastName: '',
-          businessName: '',
-          phone: '',
-          email: '',
-          question: ''
-        });
-        setCaptchaVal1(Math.floor(Math.random() * 10) + 1);
-        setCaptchaVal2(Math.floor(Math.random() * 10) + 1);
-        setCaptchaAnswer('');
-      } else {
-        console.error('Error sending email:', result);
-        setFormStatus('idle');
-        alert('Failed to send message: ' + (result.message || 'Server error.'));
-      }
-    } catch (err) {
-      console.error('Network error:', err);
-      setFormStatus('idle');
-      alert('Failed to connect to the server. Please try again later. Alternatively, please email info@equipmentonsale.com');
-    }
+    submitWeb3Form({
+      name: `${formData.firstName} ${formData.lastName}`,
+      email: formData.email,
+      phone: formData.phone,
+      business_name: formData.businessName,
+      message: formData.question
+    });
   };
 
   const handleContactClick = (e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>, customMessage: string = '') => {
