@@ -195,7 +195,7 @@ export default function Home({ handleContactClick }: { handleContactClick: (e: R
                 <div className="absolute -top-10 right-8 bg-white p-3 rounded-full shadow-lg z-20">
                   <Factory className="h-8 w-8 text-[#B73D73]" />
                 </div>
-                <h4 className="text-xl font-bold text-gray-900 mb-2">Off lease used PRINTING equipment</h4>
+                <h4 className="text-xl font-bold text-gray-900 mb-2">Off lease used <span className="text-[#B73D73]">PRINTING</span> equipment</h4>
                 <p className="text-gray-600">High-performance presses and complete finishing equipment for commercial print operations.</p>
               </div>
             </div>
@@ -219,7 +219,7 @@ export default function Home({ handleContactClick }: { handleContactClick: (e: R
                 <div className="absolute -top-10 right-8 bg-white p-3 rounded-full shadow-lg z-20">
                   <Stethoscope className="h-8 w-8 text-[#B73D73]" />
                 </div>
-                <h4 className="text-xl font-bold text-gray-900 mb-2">Off lease used MEDICAL equipment</h4>
+                <h4 className="text-xl font-bold text-gray-900 mb-2">Off lease used <span className="text-[#B73D73]">MEDICAL</span> equipment</h4>
                 <p className="text-gray-600">Advanced, carefully vetted healthcare and diagnostic machinery.</p>
               </div>
             </div>
@@ -243,7 +243,7 @@ export default function Home({ handleContactClick }: { handleContactClick: (e: R
                 <div className="absolute -top-10 right-8 bg-white p-3 rounded-full shadow-lg z-20">
                   <Hammer className="h-8 w-8 text-[#B73D73]" />
                 </div>
-                <h4 className="text-xl font-bold text-gray-900 mb-2">Off lease used METAL WORK equipment</h4>
+                <h4 className="text-xl font-bold text-gray-900 mb-2">Off lease used <span className="text-[#B73D73]">METAL WORK</span> equipment</h4>
                 <p className="text-gray-600">Precision fabrication, CNCs, and heavy-duty machining tools.</p>
               </div>
             </div>
@@ -267,7 +267,7 @@ export default function Home({ handleContactClick }: { handleContactClick: (e: R
                 <div className="absolute -top-10 right-8 bg-white p-3 rounded-full shadow-lg z-20">
                   <Package className="h-8 w-8 text-[#B73D73]" />
                 </div>
-                <h4 className="text-xl font-bold text-gray-900 mb-2">Off lease used PACKAGING equipment</h4>
+                <h4 className="text-xl font-bold text-gray-900 mb-2">Off lease used <span className="text-[#B73D73]">PACKAGING</span> equipment</h4>
                 <p className="text-gray-600">Efficient, scalable automated packaging line solutions.</p>
               </div>
             </div>
@@ -291,7 +291,7 @@ export default function Home({ handleContactClick }: { handleContactClick: (e: R
                 <div className="absolute -top-10 right-8 bg-white p-3 rounded-full shadow-lg z-20">
                   <HardHat className="h-8 w-8 text-[#B73D73]" />
                 </div>
-                <h4 className="text-xl font-bold text-gray-900 mb-2">Off lease used CONSTRUCTION equipment</h4>
+                <h4 className="text-xl font-bold text-gray-900 mb-2">Off lease used <span className="text-[#B73D73]">CONSTRUCTION</span> equipment</h4>
                 <p className="text-gray-600">Rugged, job-site-ready machinery and heavy earth-moving equipment.</p>
               </div>
             </div>
